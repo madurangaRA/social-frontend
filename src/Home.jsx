@@ -1,14 +1,29 @@
-import React from 'react'
-import 
-{ BsTwitter, BsTiktok,  BsFacebook, BsInstagram}
- from 'react-icons/bs'
- import 
- { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } 
- from 'recharts';
+ import React, { useState, useEffect } from 'react';
 
 function Home() {
+  const [chartComponents, setChartComponents] = useState(null);
+  const [iconComponents, setIconComponents] = useState(null);
 
-    const data = [
+  useEffect(() => {
+    Promise.all([
+      import('recharts'),
+      import('react-icons/bs')
+    ]).then(([recharts, bsIcons]) => {
+      setChartComponents(recharts);
+      setIconComponents(bsIcons);
+    }).catch(error => {
+      console.error('Error loading dynamic imports:', error);
+    });
+  }, []);
+
+  if (!chartComponents || !iconComponents) {
+    return <div>Loading...</div>;
+  }
+
+  const { BarChart, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line } = chartComponents;
+  const { BsFacebook, BsTwitter, BsInstagram, BsTiktok } = iconComponents;
+
+  const data = [
         {
           name: 'Jan',
           facebook: 4000,
@@ -58,73 +73,50 @@ function Home() {
           amt: 2500,
         }
       ];
-     
 
-  return (
-    <main className='main-container'>
-        <div className='main-title'>
-            <h3>Total Followers</h3>
-        </div>
-
-        <div className='main-cards'>
-            <div className='card'>
-                <div className='card-inner'>
-                    <h3>Facebook</h3>
-                    <BsFacebook className='card_icon'/>
-                </div>
-                <h1>300</h1>
+      return (
+        <main className='main-container'>
+            <div className='main-title'>
+                <h3>Total Followers</h3>
             </div>
-            <div className='card'>
-                <div className='card-inner'>
-                    <h3>X</h3>
-                    <BsTwitter className='card_icon'/>
+    
+            <div className='main-cards'>
+                <div className='card'>
+                    <div className='card-inner'>
+                        <h3>Facebook</h3>
+                        <BsFacebook className='card_icon'/>
+                    </div>
+                    <h1>300</h1>
                 </div>
-                <h1>12</h1>
-            </div>
-            <div className='card'>
-                <div className='card-inner'>
-                    <h3>Instagram</h3>
-                    <BsInstagram className='card_icon'/>
+                <div className='card'>
+                    <div className='card-inner'>
+                        <h3>X</h3>
+                        <BsTwitter className='card_icon'/>
+                    </div>
+                    <h1>12</h1>
                 </div>
-                <h1>33</h1>
-            </div>
-            <div className='card'>
-                <div className='card-inner'>
-                    <h3>TikTok</h3>
-                    <BsTiktok className='card_icon'/>
+                <div className='card'>
+                    <div className='card-inner'>
+                        <h3>Instagram</h3>
+                        <BsInstagram className='card_icon'/>
+                    </div>
+                    <h1>33</h1>
                 </div>
-                <h1>42</h1>
+                <div className='card'>
+                    <div className='card-inner'>
+                        <h3>TikTok</h3>
+                        <BsTiktok className='card_icon'/>
+                    </div>
+                    <h1>42</h1>
+                </div>
             </div>
-        </div>
-        <div className='main-title'>
-            <h3>Followers Per Month</h3>
-        </div>
-
-        <div className='charts'>
-            {/* <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-            width={500}
-            height={300}
-            data={data}
-            margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-            }}
-            >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="pv" fill="#8884d8" />
-                <Bar dataKey="fb" fill="#82ca9d" />
-                </BarChart>
-            </ResponsiveContainer> */}
-
-            <ResponsiveContainer width="100%" height="100%">
-                <LineChart
+            <div className='main-title'>
+                <h3>Followers Per Month</h3>
+            </div>
+    
+            <div className='charts'>
+                {/* <ResponsiveContainer width="100%" height="100%">
+                <BarChart
                 width={500}
                 height={300}
                 data={data}
@@ -135,21 +127,44 @@ function Home() {
                     bottom: 5,
                 }}
                 >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="facbook" stroke="#316FF6" />
-                <Line type="monotone" dataKey="x" stroke="#82ca9d" />
-                <Line type="monotone" dataKey="instagram" stroke="#d62976" />
-                <Line type="monotone" dataKey="tiktok" stroke="#00f2ea" />
-                </LineChart>
-            </ResponsiveContainer>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="pv" fill="#8884d8" />
+                    <Bar dataKey="fb" fill="#82ca9d" />
+                    </BarChart>
+                </ResponsiveContainer> */}
+    
+                <ResponsiveContainer width="100%" height="100%">
+                    <LineChart
+                    width={500}
+                    height={300}
+                    data={data}
+                    margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                    }}
+                    >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line type="monotone" dataKey="facbook" stroke="#316FF6" />
+                    <Line type="monotone" dataKey="x" stroke="#82ca9d" />
+                    <Line type="monotone" dataKey="instagram" stroke="#d62976" />
+                    <Line type="monotone" dataKey="tiktok" stroke="#00f2ea" />
+                    </LineChart>
+                </ResponsiveContainer>
+    
+            </div>
+        </main>
+      )
+    }
 
-        </div>
-    </main>
-  )
-}
 
-export default Home
+export default Home;
